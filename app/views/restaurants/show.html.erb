@@ -6,15 +6,31 @@
   <p>phone number: <%= @restaurant.phone_number %></p>
   <p>category: <%=@restaurant.category %></p>
 
-  <ul>
-    <% @restaurant.reviews.each do |review| %>
-      <li>
-        <p>Rating: <%= '⭐️' * review.rating %></p>
-        <p>Review:<%= review.content %></p>
-      </li>
-    <% end %>
-  </ul>
+  <h2>Reviews</h2>
+  <% if @restaurant.reviews.any? %>
+    <div class="container d-flex gap-3">
+      <% @restaurant.reviews.each do |review| %>
+        <div class="card text-bg-primary mb-3" style="max-width: 18rem;">
+          <div class="card-header">Rating: <%= '⭐️' * review.rating.to_i %></div>
+          <div class="card-body">
+            <h5 class="card-title">Review</h5>
+            <p class="card-text"><%= review.content %></p>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <p>No reviews</p>
+  <% end %>
 
-
-  <%= link_to 'Add review', new_restaurant_review_path(@restaurant)  %>
+  <h1>Create a new review for <%= @restaurant.name %></h1>
+  <div class="container-md">
+    <div class="container">
+      <%= simple_form_for([@restaurant, @review]) do |f| %>
+        <%= f.input :content %>
+        <%= f.input :rating, collection: 0..5 %>
+        <%= f.button :submit, class: 'btn btn-primary' %>
+      <% end %>
+    </div>
+  </div>
 </div>
